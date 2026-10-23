@@ -1,0 +1,237 @@
+{
+  "schemaVersion": "1.0",
+  "video": {
+    "aspect": "16:9",
+    "fps": 30
+  },
+  "theme": {
+    "foreground": "#f1f1ee",
+    "accent": "#8582ff",
+    "highlight": "#ffb832",
+    "background": "#020709"
+  },
+  "brand": "ASTER / CONCEPT DEMO",
+  "scenes": [
+    {
+      "id": "chip",
+      "kind": "chip",
+      "duration": 10.8,
+      "title": "计算的经济账",
+      "summary": "从硬件成本到产出，建立直观对比。",
+      "data": {
+        "specs": [
+          {
+            "title": "ASTER X1",
+            "sub": "COMPUTE ACCELERATOR"
+          },
+          {
+            "title": "HBM × 8",
+            "sub": "HIGH BANDWIDTH MEMORY"
+          },
+          {
+            "title": "DIE LINK",
+            "sub": "HIGH-SPEED INTERCONNECT"
+          }
+        ],
+        "cost": 8,
+        "revenue": 38,
+        "currency": "$",
+        "unit": "/ 小时",
+        "costLabel": "COST · 示例租金",
+        "revenueLabel": "OUTPUT · 示例产出",
+        "badge": "ASTER · 计算平台",
+        "surface": "chip-surface.svg"
+      }
+    },
+    {
+      "id": "percentage",
+      "kind": "percentage",
+      "duration": 8,
+      "title": "让重复计算消失",
+      "summary": "网格按实际比例着色，呈现可复用的数据。",
+      "data": {
+        "value": 96,
+        "label": "示例输入 · 平均",
+        "teaser": "一个值得关注的数字",
+        "conclusion": "复用已经完成的计算",
+        "legend": [
+          "可复用数据",
+          "新增计算"
+        ]
+      }
+    },
+    {
+      "id": "system",
+      "kind": "system",
+      "duration": 3.6,
+      "title": "系统如何打开",
+      "summary": "日期翻牌与三面体组装，强调发布节点。",
+      "data": {
+        "date": "10.23",
+        "yearLabel": "2026 · OCT",
+        "brand": "ASTER",
+        "systemLabel": "COMPUTE SYSTEM"
+      }
+    },
+    {
+      "id": "architecture",
+      "kind": "architecture",
+      "duration": 2.6,
+      "title": "拆开系统的五层",
+      "summary": "以分层结构解释不同组件各自的职责。",
+      "data": {
+        "title": "Aster",
+        "subtitle": "模块化计算框架",
+        "eyebrow": "SYSTEM OVERVIEW",
+        "component": "+ 配套组件 aster-kit",
+        "command": "$ aster inspect --layers",
+        "layers": [
+          "输入",
+          "执行",
+          "缓存",
+          "调度",
+          "优化"
+        ],
+        "details": [
+          "INPUT / OUTPUT",
+          "EXECUTION CORE",
+          "MEMORY CACHE",
+          "WORKLOAD SCHEDULER",
+          "PERFORMANCE TUNING"
+        ]
+      }
+    },
+    {
+      "id": "chapters",
+      "kind": "chapters",
+      "duration": 10.2,
+      "title": "先结构，后效率",
+      "summary": "两张章节卡片承载接下来的两个问题。",
+      "data": {
+        "cards": [
+          {
+            "eyebrow": "系统结构",
+            "title": "系统由什么组成",
+            "line": "组件如何协同",
+            "emphasis": "工作"
+          },
+          {
+            "eyebrow": "运行效率",
+            "title": "用了哪些方法",
+            "line": "让重复的成本",
+            "emphasis": "降下来"
+          }
+        ],
+        "nodes": [
+          "输入数据",
+          "执行引擎",
+          "应用服务",
+          "云资源",
+          "计算芯片",
+          "开发者"
+        ],
+        "center": "AS",
+        "graphLabel": "单位运行成本"
+      }
+    },
+    {
+      "id": "thesis",
+      "kind": "thesis",
+      "duration": 5.8,
+      "title": "效率由什么决定",
+      "summary": "用仪表盘和否定划线，澄清一个常见误区。",
+      "data": {
+        "low": "低",
+        "high": "高",
+        "prefix": "运行成本",
+        "highlight": "高不高",
+        "bridge": "往往需要一起看",
+        "negative": "不能只看",
+        "statement": "芯片的峰值性能"
+      }
+    },
+    {
+      "id": "intertitle",
+      "kind": "intertitle",
+      "duration": 1.8,
+      "title": "走进 Aster 系统",
+      "summary": "主题标题作为前后段落的节奏分隔。",
+      "data": {
+        "title": "Aster",
+        "subtitle": "拆解模块化计算框架",
+        "eyebrow": "ASTER · COMPUTE · SYSTEM · CONCEPT DEMO"
+      }
+    },
+    {
+      "id": "headlines",
+      "kind": "headlines",
+      "duration": 8.2,
+      "title": "从信息洪流中提问",
+      "summary": "空间卡片飞掠后，让核心关键词停在中央。",
+      "data": {
+        "headlines": [
+          "新计算平台 发布",
+          "系统组件 更新",
+          "模块化框架 正式上线",
+          "计算引擎 全面升级",
+          "工具链 新版本",
+          "缓存系统 接入",
+          "数据管线 部署",
+          "框架文档 已上线"
+        ],
+        "label": "动态 · UPDATE",
+        "prefix": "计算平台 ",
+        "keyword": "发布",
+        "suffix": "了"
+      }
+    },
+    {
+      "id": "weights",
+      "kind": "weights",
+      "duration": 9,
+      "title": "数字背后的结构",
+      "summary": "矩阵叠层、分词器和代码共同解释数据流。",
+      "data": {
+        "eyebrow": "DATA LAYERS · 数据层",
+        "amount": "128",
+        "unit": "GB",
+        "subtitle": "示例参数与运行数据",
+        "annotation": "结构与数据，共同构成系统",
+        "structureLabel": "数据结构",
+        "tokenizerLabel": "输入解析",
+        "exampleLabel": "调用示例",
+        "input": "今天开始计算",
+        "tokens": [
+          "今天",
+          "开始",
+          "计算",
+          "。"
+        ],
+        "tokenIds": [
+          9137,
+          9083,
+          2418,
+          30
+        ],
+        "code": "engine = load('aster')\nresult = engine.run('input')",
+        "surface": "weights-panel.png"
+      }
+    }
+  ],
+  "subtitles": [],
+  "audio": {
+    "sfx": {
+      "enabled": true,
+      "volume": 1
+    },
+    "voiceover": null,
+    "cues": []
+  },
+  "cover": {
+    "title": "把复杂系统\n拆开看",
+    "subtitle": "透视结构 · 数据流 · 运行效率",
+    "eyebrow": "KINETIC TECH / ASTER",
+    "sceneId": "architecture",
+    "progress": 0.58
+  }
+}
