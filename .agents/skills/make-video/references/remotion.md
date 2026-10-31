@@ -11,12 +11,13 @@
 | preview --frames 0-59 | 全部场景首/中/末帧和指定范围短片，输出到 preview |
 | render [--only all\|video\|covers] | 按 task.deliverables 或默认清单原子输出 |
 | verify | 本轮摘要、尺寸、fps、时长、预期音轨及完整解码；不表示视听通过 |
+| inspect | 可选。校验 component-catalog、registry 与 Zod kind，并解析 reference/source。不创建 work，不替代上表七个命令。完整性失败退出码 5 |
 
 工程锁定 Remotion 4.0.538、React 19.2.0、TypeScript 5.9.3、Zod 3.25.76。无需 AE、Python 第三方库或付费服务。Chrome 路径可通过 CHROME_PATH 指定，REMOTION_CONCURRENCY 默认为 4。npm run studio 前先 npm run sound；content 改时间轴后需重建 sound。
 
 ## 参数入口
 
-唯一参数文件为 work/project/content.json。类型、长度与范围以 src/content.ts 的实际 schema 为准，未知字段会报错，不能偷偷被忽略。
+唯一参数文件为 work/project/content.json。类型、长度与范围以 src/content.ts 的实际 schema 为准，未知字段会报错，不能偷偷被忽略。`schemaVersion` 保持 `"1.0"`。不要写入 `scenes[].layers` 或 `transition`：自由组合层和跨场景转场本轮不可用，留作后续。`architecture.data.layers` 仍是五条层名。选镜头先查 `src/component-catalog.json` 与 references/components.md。
 
 - video.aspect: `16:9` 或 `9:16`；video.fps: 24–60 整数。尺寸分别 1920×1080 / 1080×1920。
 - theme: 四个十六进制颜色。文字、主强调色、部分高亮与背景可换；金属材质、渐变、矩阵色等保留固定风格，需要深度换色时修改组件。

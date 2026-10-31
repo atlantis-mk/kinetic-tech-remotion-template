@@ -5,18 +5,21 @@
 | 文件 | 职责 |
 | --- | --- |
 | content.json | 默认虚构示例与渲染参数的唯一数据源 |
-| src/content.ts | 真实 Zod 联合类型、时间/引用检查、画幅和累计帧数 |
-| src/Film.tsx | 芯片透视、扫描/计数、比例网格、立方体、分层结构、双章节 |
-| src/Extension.tsx | 成本折线、仪表命题、主题标题、空间头条、矩阵和分词/代码 |
+| src/content.ts | 真实 Zod 联合类型、时间/引用检查、画幅和累计帧数。content.json schemaVersion 仍为 "1.0" |
+| src/registry/index.ts | kind 到场景组件的唯一映射；未知 kind 报错并带上 kind 名 |
+| src/scenes/ | 按 kind 拆开的场景。旧 Film.tsx / Extension.tsx 已删除，不保留第二份实现 |
+| src/components/ | 已复用的底图与透视原语（Background、stage） |
+| src/component-catalog.json | 组件与 10 个 kind 的索引，schemaVersion "2.0" |
 | src/math.ts | 单应性矩阵、四边形投影、轨迹插值、确定性随机 |
 | src/context.tsx | 类型化场景内容上下文，嵌套标注使用同一参数 |
-| src/Video.tsx | 场景累计时序、动画时间映射、独立竖屏框架、本地媒体与音轨 |
+| src/Video.tsx | 经 registry 渲染场景、累计时序、竖屏框架、本地媒体与音轨 |
 | src/Cover.tsx | 三种封面构图、显式场景采样进度 |
 | src/cue-presets.json | 246 个相对场景时间的程序音效提示点 |
 | scripts/content.cjs | 用显式 esbuild 依赖编译真实 schema；CLI 与画面使用同一内容 |
 | scripts/build-audio.mjs | Node 标准库确定性 DSP、声像/短反射、峰值控制；按场景顺序/时长重建 WAV |
 | scripts/render.mjs | 实际合成加载与渲染、独立空闲端口、可指定 CHROME_PATH |
-| make-video/scripts/pipeline*.py | 初始化、参数/媒体/合成检查、原子交付、摘要验证 |
+| make-video/scripts/pipeline*.py | 初始化、参数/媒体/合成检查、原子交付、摘要验证。另有 inspect：catalog / registry 完整性失败时退出码 5，不替换七个命令 |
+| references/components.md、composition.md | 选型与 kind+data 编排。layers / transition 本轮不可用 |
 
 画面主体使用原生 React、SVG、Canvas 和 CSS matrix3d，并不需要 AE。原始动画的 1920×1080 空间作为原生舞台，动画时间由每场景进度映射到固定轨迹。竖屏以“标题/说明—完整结构舞台—下方解释”的独立框架重新排版，舞台内部标签会缩小，重要数字应同步写入竖屏标题/说明，需要更大竖屏主体时应改分镜布局。
 

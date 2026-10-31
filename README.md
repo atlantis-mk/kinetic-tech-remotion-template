@@ -1,5 +1,5 @@
 ---
-schema_version: "1.0"
+schema_version: "2.0"
 id: "kinetic-tech-remotion-template"
 name: "科技透视动效视频模板"
 version: "1.0.0"
@@ -57,6 +57,10 @@ reference_files:
   storyboard: ".agents/skills/make-video/assets/reference/storyboard.jpg"
   cover: ".agents/skills/make-video/assets/reference/cover-16x9.png"
   sound_style: ".agents/skills/make-video/assets/reference/sfx-style.wav"
+aivio:
+  title: "科技透视动效视频模板"
+  description: "用芯片透视、数据墙、结构拆解与空间卡片制作科技解说视频，支持参数化镜头、程序音效和三种封面。"
+  cover: "cover.png"
 ---
 
 # 科技透视动效视频模板
@@ -70,6 +74,22 @@ reference_files:
 适合科技科普、系统架构、计算效率、产品机制和数据解说。9 类动效场景加实际媒体场景，文案、数字、标注、镜头顺序、时长、画幅、字幕、声音与封面选景从 content.json 控制。可复制同类镜头并使用不同参数。
 
 模板提供固定镜头语言。全新产品外观、人物、精密机械或其他视觉隐喻仍需 AI 适配素材/组件。仅换标题不能完成所有主题的视觉改编。默认 Aster 是虚构概念演示，数字不是事实数据。
+
+## 模板中心卡片与工程元数据
+
+制作流程继续读本文件的工程字段（`id`、`name`、`engine`、`entrypoints`、`paths`、`capabilities` 等）。模板中心卡片只认 `aivio.title`、`aivio.description`、`aivio.cover`。产品不会把工程字段 `name` 当作卡片标题，也不会用工程 `description` 代替 `aivio.description`。
+
+工程 `schema_version` 为 `"2.0"`，表示本模板带有 `component-catalog.json`。它与 `content.json` 的 `schemaVersion`（仍为 `"1.0"`，场景仍是 kind + data）无关，也与卡片协议无关。
+
+| 缺失 | 模板中心行为 |
+| --- | --- |
+| 无 `aivio.title` 或为空 | 标题「未命名模板」；副标题仍为 owner/repo；不过滤出列表 |
+| 无 `aivio.description` | 「无简介」；不过滤 |
+| 无 `aivio.cover` 或封面文件不存在 | CSS 占位；不过滤 |
+
+根目录 `cover.png` 与 `aivio.cover` 一致。`reference_files.cover` 仍是风格参考图，不是卡片封面真源。
+
+`speech_semantic_alignment` 与 `automatic_voiceover_generation` 仍是 `not_implemented`。拆分场景和组件目录没有实现配音语义对齐或自动配音，也没有通用 JSON 视频 DSL 或全局 Skill。
 
 ## 素材要求
 
@@ -99,6 +119,12 @@ python3 .agents/skills/make-video/scripts/pipeline.py check
 python3 .agents/skills/make-video/scripts/pipeline.py preview --frames 0-59
 python3 .agents/skills/make-video/scripts/pipeline.py render
 python3 .agents/skills/make-video/scripts/pipeline.py verify
+```
+
+可选的组件完整性检查（不替代上面七个命令；catalog / registry / 引用路径不合法时退出码 5）：
+
+```bash
+python3 .agents/skills/make-video/scripts/pipeline.py inspect
 ```
 
 运行环境：Node.js 22+、npm、Python 3.10+、FFmpeg/ffprobe、Chrome 与中文字体。锁文件固定 Remotion 4.0.538。第一次 init --install 需要下载 npm 依赖；不需要任何付费服务。

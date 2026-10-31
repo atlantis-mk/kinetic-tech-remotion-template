@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""单期工具 env/init/validate/check/preview/render/verify。技术检查不代替视听验收。
+"""单期工具 env/init/validate/check/preview/render/verify，以及可选 inspect。技术检查不代替视听验收。
 
-0 成功；2 用法错误；3 环境缺失；5 输入不合法；7 执行失败。最后一行输出 JSON。
+0 成功；2 用法错误；3 环境缺失；5 输入不合法；7 执行失败。inspect 完整性失败也是 5。最后一行输出 JSON。
 """
 import argparse
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -165,6 +166,110 @@ def verify(root):
     return report
 
 
+def _quoted_kinds(text, pattern, error):
+    match=re.search(pattern, text, re.S)
+    if not match:
+        raise ValueError(error)
+    kinds=re.findall(r'''["']([A-Za-z0-9_-]+)["']''', match.group(1))
+    if not kinds or len(kinds)!=len(set(kinds)):
+        raise ValueError(error)
+    return kinds
+
+
+def _mapping_keys(text):
+    match=re.search(r'export const SCENE_COMPONENTS = \{(.*?)\} as const', text, re.S)
+    if not match:
+        raise ValueError('registry missing SCENE_COMPONENTS')
+    keys=re.findall(r'(?m)^\s*([A-Za-z0-9_-]+)\s*:', match.group(1))
+    if not keys or len(keys)!=len(set(keys)):
+        raise ValueError('registry missing SCENE_COMPONENTS')
+    return keys
+
+
+def _kind_diff(expected, actual):
+    missing=','.join(sorted(set(expected)-set(actual)))
+    extra=','.join(sorted(set(actual)-set(expected)))
+    return 'missing '+missing+' extra '+extra
+
+
+def _reference(root, item):
+    if 'reference' not in item:
+        raise ValueError('reference not found: '+str(item.get('id')))
+    ref=item.get('reference')
+    if ref is None:
+        notes=item.get('notes')
+        if not isinstance(notes, str) or not notes.strip():
+            raise ValueError('reference null requires notes: '+str(item.get('id')))
+        return
+    if not isinstance(ref, str) or not ref:
+        raise ValueError('reference not found: '+str(item.get('id')))
+    try:
+        path=inside(root, ref)
+    except ValueError:
+        raise ValueError('reference not found: '+ref)
+    if not path.is_file():
+        raise ValueError('reference not found: '+ref)
+
+
+def inspect(root):
+    """校验 catalog、registry 与 Zod kind 一致，并解析 reference/source。失败为输入不合法（退出码 5）。"""
+    catalog_path=root/SOURCE/'src/component-catalog.json'
+    registry_path=root/SOURCE/'src/registry/index.ts'
+    schema_path=root/SOURCE/'src/content.ts'
+    if not catalog_path.is_file():
+        raise ValueError('catalog missing')
+    if not registry_path.is_file():
+        raise ValueError('registry missing')
+    if not schema_path.is_file():
+        raise ValueError('schema missing')
+    try:
+        catalog=read_json(catalog_path)
+    except json.JSONDecodeError:
+        raise ValueError('catalog invalid')
+    if catalog.get('schemaVersion')!='2.0':
+        raise ValueError('catalog schemaVersion must be 2.0')
+    registry=registry_path.read_text(encoding='utf-8')
+    schema=schema_path.read_text(encoding='utf-8')
+    if 'Unknown scene kind:' not in registry:
+        raise ValueError('registry missing Unknown scene kind')
+    known=_quoted_kinds(registry, r'export const KNOWN_KINDS = \[(.*?)\] as const', 'registry missing KNOWN_KINDS')
+    mapped=_mapping_keys(registry)
+    zod=re.findall(r'''variant\(['"]([A-Za-z0-9_-]+)['"]\)''', schema)
+    if set(known)!=set(mapped) or len(mapped)!=len(set(mapped)):
+        raise ValueError('registry kind mismatch: '+_kind_diff(known, mapped))
+    if set(known)!=set(zod) or len(zod)!=len(set(zod)):
+        raise ValueError('zod kind mismatch: '+_kind_diff(known, zod))
+    scenes=catalog.get('scenes')
+    components=catalog.get('components')
+    if not isinstance(scenes, list) or not scenes:
+        raise ValueError('catalog scenes missing')
+    if not isinstance(components, list) or not components:
+        raise ValueError('catalog components missing')
+    scene_kinds=[]
+    for item in scenes:
+        kind=item.get('kind') if isinstance(item, dict) else None
+        if not isinstance(kind, str) or not kind:
+            raise ValueError('catalog kind mismatch: empty kind')
+        scene_kinds.append(kind)
+    if len(scene_kinds)!=len(set(scene_kinds)):
+        dup=','.join(sorted({k for k in scene_kinds if scene_kinds.count(k)>1}))
+        raise ValueError('duplicate catalog kind: '+dup)
+    if set(scene_kinds)!=set(known):
+        raise ValueError('catalog kind mismatch: '+_kind_diff(known, scene_kinds))
+    for item in list(components)+list(scenes):
+        if not isinstance(item, dict) or not item.get('id'):
+            raise ValueError('catalog id missing')
+        _reference(root, item)
+        source=item.get('source')
+        try:
+            path=inside(root/SOURCE, source)
+        except ValueError:
+            raise ValueError('source not found: '+str(source))
+        if not path.is_file():
+            raise ValueError('source not found: '+str(source))
+    return {'schemaVersion':'2.0','kinds':known,'scenes':len(scenes),'components':len(components)}
+
+
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__,allow_abbrev=False);parser.add_argument('--root',type=Path,default=ROOT)
     cmds=parser.add_subparsers(dest='command',required=True)
@@ -172,6 +277,7 @@ def main(argv=None):
     p=cmds.add_parser('init');p.add_argument('--install',action='store_true')
     p=cmds.add_parser('preview');p.add_argument('--frames')
     p=cmds.add_parser('render');p.add_argument('--only',choices=('all','video','covers'),default='all')
+    cmds.add_parser('inspect')
     args=parser.parse_args(argv);root=args.root.resolve()
     try:
         if args.command=='env':
@@ -182,6 +288,7 @@ def main(argv=None):
         elif args.command in ('validate','check'):validate(root,args.command=='check');result={'report':str(root/'work/preview/check-report.json')}
         elif args.command=='preview':result=preview(root,args.frames)
         elif args.command=='render':result=render(root,args.only)
+        elif args.command=='inspect':result=inspect(root)
         else:result=verify(root)
         print(json.dumps({'ok':True,**result},ensure_ascii=False));return 0
     except (OSError,ValueError,KeyError,TypeError,RuntimeError,subprocess.SubprocessError) as error:
