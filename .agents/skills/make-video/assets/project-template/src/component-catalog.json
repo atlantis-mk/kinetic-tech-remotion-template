@@ -1,0 +1,117 @@
+{
+  "schemaVersion": "2.0",
+  "components": [
+    {
+      "id": "background",
+      "name": "Background",
+      "kind": "primitive",
+      "propsSummary": ["t"],
+      "useCases": ["非 media 与 media 场景共用的深色环境底"],
+      "reference": ".agents/skills/make-video/assets/reference/storyboard.jpg",
+      "source": "src/components/Background.tsx"
+    },
+    {
+      "id": "stage",
+      "name": "StagePrimitives",
+      "kind": "primitive",
+      "propsSummary": ["Plane", "WorldSvg", "Svg", "Mono"],
+      "useCases": ["场景内部的透视平面、全画幅标注和等宽标签"],
+      "reference": null,
+      "notes": "无独立参考静帧；这些原语出现在各场景参考图中，不单独成镜",
+      "source": "src/components/stage.tsx"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "chip",
+      "kind": "chip",
+      "name": "ChipScene",
+      "propsSummary": ["data.specs", "data.cost", "data.revenue", "data.currency", "data.unit", "data.costLabel", "data.revenueLabel", "data.badge", "data.surface"],
+      "useCases": ["硬件、成本与产出的透视对比"],
+      "reference": ".agents/skills/make-video/assets/reference/chip.jpg",
+      "source": "src/scenes/ChipScene.tsx"
+    },
+    {
+      "id": "percentage",
+      "kind": "percentage",
+      "name": "PercentScene",
+      "propsSummary": ["data.value", "data.label", "data.teaser", "data.conclusion", "data.legend"],
+      "useCases": ["百分比数据墙与结论落定"],
+      "reference": ".agents/skills/make-video/assets/reference/percentage.jpg",
+      "source": "src/scenes/PercentScene.tsx"
+    },
+    {
+      "id": "system",
+      "kind": "system",
+      "name": "DateScene",
+      "propsSummary": ["data.date", "data.yearLabel", "data.brand", "data.systemLabel"],
+      "useCases": ["日期翻牌与系统立方体"],
+      "reference": ".agents/skills/make-video/assets/reference/system.jpg",
+      "source": "src/scenes/DateScene.tsx"
+    },
+    {
+      "id": "architecture",
+      "kind": "architecture",
+      "name": "Architecture",
+      "propsSummary": ["data.title", "data.subtitle", "data.eyebrow", "data.component", "data.command", "data.layers", "data.details"],
+      "useCases": ["五层结构拆解与命令行标注"],
+      "reference": ".agents/skills/make-video/assets/reference/architecture.jpg",
+      "source": "src/scenes/Architecture.tsx"
+    },
+    {
+      "id": "chapters",
+      "kind": "chapters",
+      "name": "Chapters",
+      "propsSummary": ["data.cards", "data.nodes", "data.center", "data.graphLabel"],
+      "useCases": ["双章节卡片、关系网络与成本折线"],
+      "reference": ".agents/skills/make-video/assets/reference/chapters.jpg",
+      "source": "src/scenes/Chapters.tsx"
+    },
+    {
+      "id": "thesis",
+      "kind": "thesis",
+      "name": "ThesisScene",
+      "propsSummary": ["data.low", "data.high", "data.prefix", "data.highlight", "data.bridge", "data.negative", "data.statement"],
+      "useCases": ["仪表命题、强调词与否定划线"],
+      "reference": ".agents/skills/make-video/assets/reference/thesis.jpg",
+      "source": "src/scenes/ThesisScene.tsx"
+    },
+    {
+      "id": "intertitle",
+      "kind": "intertitle",
+      "name": "Intertitle",
+      "propsSummary": ["data.title", "data.subtitle", "data.eyebrow"],
+      "useCases": ["短主题标题卡"],
+      "reference": ".agents/skills/make-video/assets/reference/intertitle.jpg",
+      "source": "src/scenes/Intertitle.tsx"
+    },
+    {
+      "id": "headlines",
+      "kind": "headlines",
+      "name": "HeadlinesScene",
+      "propsSummary": ["data.headlines", "data.label", "data.prefix", "data.keyword", "data.suffix"],
+      "useCases": ["空间新闻飞掠与主卡片"],
+      "reference": ".agents/skills/make-video/assets/reference/headlines.jpg",
+      "source": "src/scenes/HeadlinesScene.tsx"
+    },
+    {
+      "id": "weights",
+      "kind": "weights",
+      "name": "WeightsScene",
+      "propsSummary": ["data.eyebrow", "data.amount", "data.unit", "data.subtitle", "data.annotation", "data.structureLabel", "data.tokenizerLabel", "data.exampleLabel", "data.input", "data.tokens", "data.tokenIds", "data.code", "data.surface"],
+      "useCases": ["参数矩阵、分词与代码示例"],
+      "reference": ".agents/skills/make-video/assets/reference/weights.jpg",
+      "source": "src/scenes/WeightsScene.tsx"
+    },
+    {
+      "id": "media",
+      "kind": "media",
+      "name": "MediaScene",
+      "propsSummary": ["data.file", "data.type", "data.fit", "data.eyebrow", "title"],
+      "useCases": ["真实图片或视频；主题不适合芯片或矩阵隐喻时"],
+      "reference": null,
+      "notes": "无独立参考静帧；画面由本期 public/ 素材决定，视频默认静音",
+      "source": "src/scenes/MediaScene.tsx"
+    }
+  ]
+}

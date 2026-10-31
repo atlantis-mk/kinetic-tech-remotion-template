@@ -8,7 +8,7 @@ README 第一行 --- 开始 UTF-8 YAML，用下一行独立 --- 结束；安全�
 
 | 必填字段 | 约定 |
 | --- | --- |
-| schema_version | 字符串 "1.0" |
+| schema_version | 字符串 "2.0"。表示工程带有组件目录；与 content.json 的 schemaVersion、以及卡片 aivio.* 协议都无关 |
 | id | 稳定小写字母/数字/连字符标识 |
 | name, description | 非空显示名称与用途 |
 | version | 字符串，主版本.次版本.修订版本 |
@@ -52,6 +52,24 @@ paths:
 可选 reference_files 将用途映射到随包存在的参考文件，不能指向临时预览或另一台电脑的绝对路径。
 
 ready 的依据是实际工程、足够的风格参考、运行入口以及至少一次真实预览/渲染。它不代表所有能力均 verified，更不代表本期已完成。scaffold 明确还缺什么。
+
+## 卡片字段与工程字段双轨
+
+模板中心卡片只认 `aivio.title`、`aivio.description`、`aivio.cover`。这些键与上表工程字段写在同一份 README frontmatter 里，互不替换。工程 `name` 不是卡片标题；缺 `aivio.title` 时产品显示「未命名模板」，缺描述显示「无简介」，缺封面或文件不存在时用 CSS 占位，且不过滤出列表。
+
+推荐封面是仓库根目录 `cover.png`，并与 `aivio.cover` 一致。`reference_files.cover` 只指向风格参考，不是卡片真源。
+
+```yaml
+schema_version: "2.0"
+id: example-template
+engine: remotion
+aivio:
+  title: "示例标题"
+  description: "示例简介"
+  cover: "cover.png"
+```
+
+`speech_semantic_alignment` 与 `automatic_voiceover_generation` 未实现时保持 `not_implemented`。组件目录不是配音能力，也不是通用 JSON DSL 或全局 Skill。
 
 ## 文档一致性
 

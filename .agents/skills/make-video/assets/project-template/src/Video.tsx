@@ -1,20 +1,15 @@
 import React from 'react';
-import {AbsoluteFill,Audio,Img,OffthreadVideo,Sequence,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
+import {AbsoluteFill,Audio,Sequence,staticFile,useCurrentFrame,useVideoConfig} from 'remotion';
 import {content,timeline,origin,Content,Scene} from './content';
 import {SceneContext} from './context';
-import {Background,ChipScene,PercentScene,DateScene,Architecture,Chapters} from './Film';
-import {ThesisScene,Intertitle,HeadlinesScene,WeightsScene} from './Extension';
+import {Background} from './components/Background';
+import {getSceneComponent} from './registry';
+import {MediaScene} from './scenes/MediaScene';
 export const themeStyle=(c:Content)=>({'--fg':c.theme.foreground,'--accent':c.theme.accent,'--highlight':c.theme.highlight,color:c.theme.foreground,backgroundColor:c.theme.background,fontFamily:'Arial, "PingFang SC", "Noto Sans CJK SC", sans-serif'} as React.CSSProperties);
-const Media:React.FC<{scene:Extract<Scene,{kind:'media'}>;p:number}>=({scene,p})=><>
- <div style={{position:'absolute',inset:'90px 120px 200px',transform:`scale(${1+p*.035})`,border:'1px solid #677593',borderRadius:24,overflow:'hidden'}}>
- {scene.data.type==='image'?<Img src={staticFile(scene.data.file)} style={{width:'100%',height:'100%',objectFit:scene.data.fit}}/>:<OffthreadVideo src={staticFile(scene.data.file)} muted style={{width:'100%',height:'100%',objectFit:scene.data.fit}}/>}</div>
- <div style={{position:'absolute',left:120,bottom:110,fontSize:60,fontWeight:900}}>{scene.title}</div><div style={{position:'absolute',left:120,top:45,fontSize:22,color:'var(--accent)'}}>{scene.data.eyebrow}</div>
-</>;
 export const SceneStage:React.FC<{scene:Scene;p:number}>=({scene,p})=>{
  const [a,b]=origin[scene.kind],t=a+Math.min(.9999,Math.max(0,p))*(b-a);
- const components={chip:ChipScene,percentage:PercentScene,system:DateScene,architecture:Architecture,chapters:Chapters,thesis:ThesisScene,intertitle:Intertitle,headlines:HeadlinesScene,weights:WeightsScene};
- const Component=scene.kind==='media'?null:components[scene.kind];
- return <SceneContext.Provider value={scene}><AbsoluteFill style={{width:1920,height:1080,overflow:'hidden'}}><Background t={t}/>{Component?<Component t={t}/>:scene.kind==='media'?<Media scene={scene} p={p}/>:null}<AbsoluteFill style={{background:'radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.23) 100%)'}}/><AbsoluteFill style={{backgroundImage:`url(${staticFile('grain.png')})`,opacity:.035,mixBlendMode:'screen'}}/></AbsoluteFill></SceneContext.Provider>;
+ const Component=getSceneComponent(scene.kind);
+ return <SceneContext.Provider value={scene}><AbsoluteFill style={{width:1920,height:1080,overflow:'hidden'}}><Background t={t}/>{scene.kind==='media'?<MediaScene scene={scene} p={p}/>:<Component t={t}/>}<AbsoluteFill style={{background:'radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,.23) 100%)'}}/><AbsoluteFill style={{backgroundImage:`url(${staticFile('grain.png')})`,opacity:.035,mixBlendMode:'screen'}}/></AbsoluteFill></SceneContext.Provider>;
 };
 const SceneFrame:React.FC<{scene:Scene;frames:number;portrait:boolean}>=({scene,frames,portrait})=>{
  const frame=useCurrentFrame(),{width,height}=useVideoConfig(),p=frame/Math.max(1,frames-1),scale=width/1920;

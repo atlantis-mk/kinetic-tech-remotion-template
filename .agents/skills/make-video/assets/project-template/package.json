@@ -5,6 +5,7 @@
   "scripts": {
     "studio": "remotion studio src/index.tsx",
     "typecheck": "tsc --noEmit",
+    "postinstall": "node scripts/install-esbuild-registry-hook.cjs",
     "validate": "node scripts/content.cjs validate",
     "sound": "node scripts/build-audio.mjs",
     "render": "node scripts/render.mjs video"
