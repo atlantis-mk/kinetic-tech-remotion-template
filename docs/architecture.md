@@ -16,6 +16,7 @@
 | src/Cover.tsx | 三种封面构图、显式场景采样进度 |
 | src/cue-presets.json | 246 个相对场景时间的程序音效提示点 |
 | scripts/content.cjs | 用显式 esbuild 依赖编译真实 schema；CLI 与画面使用同一内容 |
+| scripts/registry-loader-hook.cjs | `npm ci` 后把 `require("esbuild")` 接到真实 `lib/main.js`。注册表测试的 `node -e` 会把工程目录当成入口，这个钩子改去加载 `src/registry/index.ts` |
 | scripts/build-audio.mjs | Node 标准库确定性 DSP、声像/短反射、峰值控制；按场景顺序/时长重建 WAV |
 | scripts/render.mjs | 实际合成加载与渲染、独立空闲端口、可指定 CHROME_PATH |
 | make-video/scripts/pipeline*.py | 初始化、参数/媒体/合成检查、原子交付、摘要验证。另有 inspect：catalog / registry 完整性失败时退出码 5，不替换七个命令 |
