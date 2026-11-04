@@ -12,3 +12,12 @@
 8. 交付前实际查看开头、中段、结尾与转场，逐张查看最终封面；实际观看并收听有声预览，检查音画与字幕。技术、视觉、听觉验收独立记录，不能用命令成功或波形有能量替代视听结论。当前工具无法收听时如实记录 not_run。
 9. 完成阶段只记录已存在的实际产物，路径相对模板根。需求变化清除受影响阶段及后续完成记录。实际交付清单全部完成且必要验收通过后，AI 才将状态设为 completed；脚本不自动完成任务。
 10. 不覆盖用户已有任务，不自动清空 work，不提交运行素材、成片或凭据。GitHub 默认只保留模板源码、必要资产及参考图片/音频，仓库 Topic 为 aivio-template。
+
+## Cursor Cloud specific instructions
+
+- 仓库根没有 `package.json`。安装、类型检查和 Studio 都在 `.agents/skills/make-video/assets/project-template`：`npm ci`、`npm run typecheck`、`npm run studio -- --port 3000 --no-open --ipv4`。
+- 基础镜像的 Node 22 在 nvm 里，登录 shell 不会加载 nvm。环境安装会把该 Node 的 `node`、`npm`、`npx` 链到 `/usr/local/bin`。需要 Node 22+、Python 3.10+、ffmpeg、ffprobe、Google Chrome 与中文字体。
+- `python3 .agents/skills/make-video/scripts/pipeline.py env` 只检查命令是否存在。`inspect` 检查组件目录。环境验收不要运行 `init`，那会创建 `work/`。
+- Remotion CLI 会提示把 zod 升到 4。模板锁定 zod 3.25.76，不要改版本。Chrome Headless Shell 由 `npx remotion browser ensure` 放进 `node_modules/.remotion`。
+- 单帧验收：在工程目录执行 `node scripts/render.mjs still Main /tmp/frame.png 180`。测试：在仓库根执行 `python3 -m unittest discover -s tests -p 'test_*.py'`。
+- Cloud Agent 启动后 Remotion Studio 监听 `http://127.0.0.1:3000`。Studio 时间轴可以打开；若预览画布没有画面，以 Headless Shell 的 still/render 结果判断渲染是否成功。
